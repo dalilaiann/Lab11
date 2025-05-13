@@ -46,7 +46,8 @@ class View(ft.UserControl):
         self._page.controls.append(self.txtOut)
 
         self._ddnode = ft.Dropdown(label="Product")
-        self.btn_search = ft.ElevatedButton(text="Cerca Percorso", on_click=self._controller.handle_search)
+        self.fill_DD()
+        self.btn_search = ft.ElevatedButton(text="Cerca Percorso", on_click=self._controller.handle_search, disabled=True)
         row2 = ft.Row([self._ddnode, self.btn_search],
                       alignment=ft.MainAxisAlignment.CENTER)
         self._page.controls.append(row2)
@@ -73,4 +74,9 @@ class View(ft.UserControl):
         self._page.update()
 
     def update_page(self):
+        self._page.update()
+
+    def fill_DD(self):
+        for i in range(2015, 2019):
+            self._ddyear.options.append(ft.dropdown.Option(i))
         self._page.update()
