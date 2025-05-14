@@ -60,24 +60,19 @@ class DAO():
         return res
 
     @staticmethod
-    def getAllEdgesByYearColor(year, color, idMap):
+    def getAllEdgesByYearColor(u,v, year):
         conn = DBConnect.get_connection()
         cursor = conn.cursor(dictionary=True)
 
-        query = """select gds1.Product_number as p1, gds2.Product_number as p2, COUNT(DISTINCT gds1.date) as n
+        query = """select COUNT(DISTINCT gds1.date) as n
                     from go_daily_sales gds1, go_daily_sales gds2
-                    where gds1.Product_number<gds2.Product_number and YEAR(gds1.Date)=%s and YEAR(gds1.Date)=%s
-                    and gds1.date=gds2.date and gds1.Retailer_code=gds2.Retailer_code
-                    group by gds1.Product_number, gds2.Product_number """
+                    where gds1.Product_number=%s and gds2.Product_number=%s and YEAR(gds1.Date)=%s and YEAR(gds1.Date)=%s
+                    and gds1.date=gds2.date and gds1.Retailer_code=gds2.Retailer_code """
 
-        cursor.execute(query, (year,year))
-        res = []
-
+        cursor.execute(query, (u.Product_number,v.Product_number,year,year))
+        res=0
         for row in cursor:
-            o1=idMap[row["p1"]]
-            o2=idMap[row["p2"]]
-            if o1.Product_color==color and o2.Product_color==color:
-                res.append((o1, o2, row["n"]))
+            res=row["n"]
 
         cursor.close()
         conn.close()

@@ -44,14 +44,27 @@ class Controller:
         else:
             self._view.txtOut.controls.append(ft.Text(f"Non esiste un grafo con il colore e gli anni specificati. "))
 
+        self.fillDDProduct(self._model._graph.nodes)
+        self._view.btn_search.disabled=False
         self._view.update_page()
 
-
-
-
-    def fillDDProduct(self):
-        pass
+    def fillDDProduct(self, nodi):
+        self._view._ddnode.options.clear()
+        for n in nodi:
+            self._view._ddnode.options.append(ft.dropdown.Option(str(n)))
 
 
     def handle_search(self, e):
-        pass
+        product=self._view._ddnode.value
+        self._view.txtOut2.controls.clear()
+        if product is None:
+            self._view.create_alert("Seleziona un prodotto! ")
+            return
+        else:
+            nodi=self._model.getPercorsoOpt(int(product))
+            if len(nodi)>1:
+                self._view.txtOut2.controls.append(ft.Text(f"Numero di archi percorso più lungo: {len(nodi)-1}"))
+            else:
+                self._view.txtOut2.controls.append(ft.Text(f"Non esistono nodi connessi al nodo {product}"))
+        self._view.update_page()
+

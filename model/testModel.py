@@ -5,5 +5,5 @@ myModel.buildGraph('White', 2018)
 print(myModel.getNumNodes())
 print(myModel.getNumEdges())
 
-for n in myModel._graph.nodes:
-    print(str(n))
+for n in myModel._graph.edges(data=True):
+    print(n)
