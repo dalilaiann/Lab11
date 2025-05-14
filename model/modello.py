@@ -86,17 +86,17 @@ class Model:
 
     def is_admisible(self, parziale, nodo):
 
-        if len(parziale)>0:
+        if len(parziale)>=2:
             last = parziale[-1]
-            # controllo che non ci siano cicli
-            for i in range(len(parziale)-1):
-                if (parziale[i]==last and parziale[i+1]==nodo) or (parziale[i]==nodo and parziale[i+1]==last) :
+            if self._graph[last][nodo]['weight']<self._graph[parziale[-2]][parziale[-1]]['weight']:
                     return False
 
-            #controllo il peso
-            for i in range(len(parziale)-1):
-                if self._graph[last][nodo]['weight']<self._graph[parziale[i]][parziale[i+1]]['weight']:
-                    return False
+            if self._graph[last][nodo]['weight'] == self._graph[parziale[-2]][parziale[-1]]['weight']:
+                count=len(parziale)-1
+                while (count>0 and self._graph[parziale[count-1]][parziale[count]]['weight']==self._graph[last][nodo]['weight']):
+                    if (parziale[count]== last and parziale[count-1] == nodo) or (parziale[count] == nodo and parziale[count-1] == last):
+                        return False
+                    count-=1
 
         return True
 
@@ -105,8 +105,9 @@ class Model:
 
 if __name__=="__main__":
     myModel=Model()
-    myModel.buildGraph('White', 2018)
-    nodi=myModel.getPercorsoOpt(94110)
+    myModel.buildGraph('Red', 2015)
+    nodi=myModel.getPercorsoOpt(12110)
+    print(len(myModel.getPercorsoOpt(12110)))
     for i in range(len(nodi)-1):
         print(f"{str(nodi[i])}-{str(nodi[i+1])}-{myModel._graph[nodi[i]][nodi[i+1]]['weight']}")
 
